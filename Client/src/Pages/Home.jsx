@@ -3,7 +3,7 @@ import Hero from '../Components/Hero'
 import LatestCollection from '../Components/LatestCollection'
 import BestSeller from '../Components/BestSeller'
 import OurPolicy from '../Components/OurPolicy'
-import NewsLetterBox from '../Components/NewsLetterBox'
+import NewsLetterBox from '../Components/TempName'
 
 const Home = () => {
   return (
