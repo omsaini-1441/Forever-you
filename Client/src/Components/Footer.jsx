@@ -8,7 +8,7 @@ const Footer = () => {
             <div>
                 <img src={assets.logo} className='mb-5 w-32 ' alt="" />
                 <p className='w-full md:w-2/3 text-gray-600 ' >
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem voluptatum illo nulla natus sed Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem voluptatum illo nulla.
+                Forever You is your trusted companion in discovering products that inspire and elevate your lifestyle. With a focus on quality, convenience, and customer satisfaction, we're committed to enhancing your shopping experience every step of the way.
                 </p>
             </div>
 
