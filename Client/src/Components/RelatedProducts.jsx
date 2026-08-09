@@ -21,7 +21,8 @@ const RelatedProducts = ({ category, subCategory }) => {
       // Set the first 5 related products
       setRelated(productsCopy.slice(0, 5));
     }
-  }, [products]); 
+  }, [products, category, subCategory]);
+
 
   return (
     <div className="my-24">
