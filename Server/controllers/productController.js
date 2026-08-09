@@ -32,6 +32,7 @@ const uploadImage = async (file) => {
   if (cloudinaryReady()) {
     const result = await cloudinary.uploader.upload(file.path, {
       folder: "forever-you",
+      asset_folder: "forever-you",
     });
     try {
       fs.unlinkSync(file.path);
