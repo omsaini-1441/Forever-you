@@ -6,8 +6,9 @@ import { motion } from "framer-motion";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false); // State for controlling sidebar visibility
-  const { showSearch, setShowSearch, getCartCount } = useContext(ShopContext); // Accessing context for search and cart
-  const location = useLocation(); // To determine the active route
+  const { showSearch, setShowSearch, getCartCount, navigate, token, logout } =
+    useContext(ShopContext);
+  const location = useLocation();
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
@@ -59,20 +60,33 @@ const Navbar = () => {
 
         {/* Profile dropdown */}
         <div className="group relative">
-          <Link to="/login">
-            <img
-              src={assets.profile_icon}
-              className="w-5 cursor-pointer"
-              alt=""
-            />
-          </Link>
-          <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-              <p className="cursor-pointer hover:text-black">My Profile</p>
-              <p className="cursor-pointer hover:text-black">Orders</p>
-              <p className="cursor-pointer hover:text-black">Logout</p>
+          <img
+            onClick={() => {
+              if (!token) navigate("/login");
+            }}
+            src={assets.profile_icon}
+            className="w-5 cursor-pointer"
+            alt=""
+          />
+          {token ? (
+            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
+              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
+                <p className="cursor-pointer hover:text-black">My Profile</p>
+                <p
+                  onClick={() => navigate("/orders")}
+                  className="cursor-pointer hover:text-black"
+                >
+                  Orders
+                </p>
+                <p
+                  onClick={logout}
+                  className="cursor-pointer hover:text-black"
+                >
+                  Logout
+                </p>
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
 
         {/* Cart Icon with item count */}

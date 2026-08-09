@@ -78,10 +78,10 @@ const Collection = () => {
     }
   };
 
-  // Apply filter whenever category, subcategory, search, or showSearch changes
+  // Apply filter whenever products or filters change
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory, search, showSearch]);
+  }, [products, category, subCategory, search, showSearch]);
 
   // Apply sorting whenever sortType changes
   useEffect(() => {

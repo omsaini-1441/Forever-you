@@ -8,8 +8,8 @@ const LatestCollection = () => {
   const [latestProducts, setLatestProducts] = useState([]); // State to store the latest products
 
   useEffect(() => {
-    setLatestProducts(products.slice(0, 10)); // Set the latest 10 products on component mount
-  }, []);
+    setLatestProducts(products.slice(0, 10));
+  }, [products]);
 
   return (
     <div className="my-10  ">
