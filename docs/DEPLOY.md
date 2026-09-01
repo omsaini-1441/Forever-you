@@ -2,11 +2,15 @@
 
 Vercel hosts **static frontends only** (Client + Admin). The **Express API does not run on Vercel**.
 
-## Vercel — Client project
+## Vercel — Client project (`forever-you-seven`)
 
-| Variable | Example |
-|----------|---------|
-| `VITE_BACKEND_URL` | `https://your-api.onrender.com` |
+**Site:** https://forever-you-seven.vercel.app
+
+| Variable | Value |
+|----------|--------|
+| `VITE_BACKEND_URL` | `https://YOUR_RENDER_SERVICE.onrender.com` |
+
+Apply to **Production**, **Preview**, and **Development** on Vercel (or at least Production).
 
 Redeploy after changing (Vite bakes env at build time).
 
@@ -31,7 +35,7 @@ MONGODB_URI=mongodb+srv://...
 JWT_SECRET=...
 ADMIN_EMAIL=...
 ADMIN_PASSWORD=...
-CLIENT_URL=https://your-client.vercel.app
+CLIENT_URL=https://forever-you-seven.vercel.app
 ADMIN_URL=https://your-admin.vercel.app
 BACKEND_URL=https://your-api.onrender.com
 CLOUDINARY_CLOUD_NAME=...

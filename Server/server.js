@@ -5,6 +5,7 @@ import "dotenv/config";
 import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./config/mongodb.js";
+import mongoose from "mongoose";
 import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
 import productRouter from "./routes/productRoute.js";
@@ -28,6 +29,7 @@ connectCloudinary();
 const allowedOrigins = [
   process.env.CLIENT_URL,
   process.env.ADMIN_URL,
+  "https://forever-you-seven.vercel.app",
   "http://localhost:5173",
   "http://localhost:5174",
 ].filter(Boolean);
@@ -66,6 +68,15 @@ app.get("/", (req, res) => {
   res.send("API Working");
 });
 
+app.get("/api/health", (req, res) => {
+  const states = ["disconnected", "connected", "connecting", "disconnecting"];
+  const mongoState = mongoose.connection.readyState;
+  res.json({
+    ok: mongoState === 1,
+    mongo: states[mongoState] ?? mongoState,
+  });
+});
+
 app.use((err, req, res, next) => {
   if (err.message === "Not allowed by CORS") {
     return res.status(403).json({ success: false, message: "CORS blocked" });
@@ -77,4 +88,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(port, () => console.log("Server running on PORT:" + port));
+app.listen(port, "0.0.0.0", () => console.log("Server running on PORT:" + port));

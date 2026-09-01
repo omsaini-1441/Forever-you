@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import productModel from "../models/productModel.js";
+import mongoose from "mongoose";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -95,6 +96,12 @@ const addProduct = async (req, res) => {
 
 const listProducts = async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: "Database not connected. Check MONGODB_URI and Atlas network access.",
+      });
+    }
     const products = await productModel.find({}).sort({ date: -1 });
     res.json({ success: true, products });
   } catch (error) {
