@@ -9,6 +9,7 @@ import Cart from './Pages/Cart'
 import Login from './Pages/Login'
 import PlaceOrder from './Pages/PlaceOrder'
 import Orders from './Pages/Orders'
+import Verify from './Pages/Verify'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
 import SearchBar from './Components/SearchBar'
@@ -19,7 +20,20 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   return (
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] '>
-    <ToastContainer />
+    <ToastContainer
+      position="top-center"
+      autoClose={2800}
+      hideProgressBar
+      pauseOnHover={false}
+      pauseOnFocusLoss={false}
+      closeOnClick
+      draggable={false}
+      newestOnTop
+      limit={3}
+      theme="light"
+      toastClassName="forever-toast"
+      bodyClassName="forever-toast-body"
+    />
     <Navbar />
     <SearchBar />
     <Routes>
@@ -32,6 +46,7 @@ const App = () => {
             <Route path='/login' element={<Login /> }  />
             <Route path='/place-order' element={<PlaceOrder /> }  />
             <Route path='/orders' element={<Orders /> }  />
+            <Route path='/verify' element={<Verify /> }  />
     </Routes>
     <Footer />
     </div>

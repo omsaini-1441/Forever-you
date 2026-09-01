@@ -12,6 +12,21 @@ import Orders from "./pages/Orders";
 export const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 export const currency = "$";
 
+const toastProps = {
+  position: "top-center",
+  autoClose: 2800,
+  hideProgressBar: true,
+  pauseOnHover: false,
+  pauseOnFocusLoss: false,
+  closeOnClick: true,
+  draggable: false,
+  newestOnTop: true,
+  limit: 3,
+  theme: "light",
+  toastClassName: "forever-toast",
+  bodyClassName: "forever-toast-body",
+};
+
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("adminToken") || "");
 
@@ -22,7 +37,7 @@ const App = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <ToastContainer />
+      <ToastContainer {...toastProps} />
       {token === "" ? (
         <Login setToken={setToken} />
       ) : (

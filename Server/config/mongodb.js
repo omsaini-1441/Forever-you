@@ -6,11 +6,12 @@ const connectDB = async () => {
   });
 
   const uri = process.env.MONGODB_URI || "";
-  // Support both full URIs and host-only URIs (append /e-commerce when needed)
-  const hasDbPath =
-    /mongodb(\+srv)?:\/\/[^/]+\/[^?]+/.test(uri) &&
-    !uri.endsWith("/");
-  const connectionString = hasDbPath ? uri : `${uri.replace(/\/$/, "")}/e-commerce`;
+  let connectionString = uri;
+
+  if (!/mongodb(\+srv)?:\/\/[^/]+\/[^/?]+/.test(uri)) {
+    const [base, query] = uri.split("?");
+    connectionString = `${base.replace(/\/$/, "")}/e-commerce${query ? `?${query}` : ""}`;
+  }
 
   await mongoose.connect(connectionString);
 };

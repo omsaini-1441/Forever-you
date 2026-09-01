@@ -108,7 +108,7 @@ const Navbar = () => {
 
       {/* Sidebar menu for smaller screens */}
       <div
-        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ease-out duration-[400ms] ${
+        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-[width] ease-out duration-[400ms] ${
           visible ? "w-full" : "w-0"
         }`}
       >

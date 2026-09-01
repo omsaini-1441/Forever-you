@@ -67,8 +67,73 @@ const PlaceOrder = () => {
         return;
       }
 
-      if (method !== "cod") {
-        toast.info("Online payments coming in Phase 6 — use Cash on Delivery for now");
+      if (method === "stripe") {
+        toast.info(
+          "Stripe is invite-only in India — use Razorpay or Cash on Delivery"
+        );
+        return;
+      }
+
+      if (method === "razorpay") {
+        const response = await axios.post(
+          `${backendUrl}/api/order/razorpay`,
+          { address: formData, items: orderItems },
+          { headers: { token } }
+        );
+
+        if (!response.data.success) {
+          toast.error(response.data.message);
+          return;
+        }
+
+        const options = {
+          key: response.data.key_id,
+          amount: response.data.amount * 100,
+          currency: "INR",
+          name: "Forever You",
+          description: "Order Payment",
+          order_id: response.data.razorpayOrderId,
+          handler: async function (razorpayResponse) {
+            try {
+              const verifyRes = await axios.post(
+                `${backendUrl}/api/order/verifyRazorpay`,
+                {
+                  orderId: response.data.order._id,
+                  razorpay_order_id: razorpayResponse.razorpay_order_id,
+                  razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                  razorpay_signature: razorpayResponse.razorpay_signature,
+                },
+                { headers: { token } }
+              );
+              if (verifyRes.data.success) {
+                setCartItems({});
+                toast.success("Payment successful");
+                navigate("/orders");
+              } else {
+                toast.error(verifyRes.data.message);
+              }
+            } catch (error) {
+              console.log(error);
+              toast.error(error.message);
+            }
+          },
+          prefill: {
+            name: `${formData.firstName} ${formData.lastName}`.trim(),
+            email: formData.email,
+            contact: formData.phone,
+          },
+          theme: { color: "#000000" },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on("payment.failed", function (response) {
+          const msg =
+            response?.error?.description ||
+            response?.error?.reason ||
+            "Payment failed";
+          toast.error(msg);
+        });
+        rzp.open();
         return;
       }
 
@@ -228,6 +293,16 @@ const PlaceOrder = () => {
               ></p>
               <img className="h-5 mx-4" src={assets.razorpay_logo} alt="" />
             </div>
+
+            {method === "razorpay" && (
+              <p className="text-xs text-gray-500 mt-2 max-w-md leading-relaxed">
+                Test mode (India): use <strong>UPI</strong>{" "}
+                <code className="bg-gray-100 px-1">success@razorpay</code>, or{" "}
+                <strong>NetBanking</strong> (any bank → Success), or domestic
+                test card <code className="bg-gray-100 px-1">5267 3181 8797 5449</code>.
+                International / foreign cards are not supported on Indian Razorpay.
+              </p>
+            )}
 
             <div
               onClick={() => setMethod("cod")}

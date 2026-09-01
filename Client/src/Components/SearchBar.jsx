@@ -21,7 +21,7 @@ const SearchBar = () => {
 
   return (
     <div
-      className={`transition-all duration-700 overflow-hidden ${
+      className={`transition-[max-height,opacity] duration-700 ease-in-out overflow-hidden ${
         showSearch && visible
           ? "max-h-[150px] opacity-100"
           : "max-h-0 opacity-0"
