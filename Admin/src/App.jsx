@@ -9,7 +9,8 @@ import Add from "./pages/Add";
 import List from "./pages/List";
 import Orders from "./pages/Orders";
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+export const backendUrl =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 export const currency = "$";
 
 const toastProps = {
@@ -36,24 +37,23 @@ const App = () => {
   }, [token]);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="min-h-screen bg-[#f4f4f5]">
       <ToastContainer {...toastProps} />
       {token === "" ? (
         <Login setToken={setToken} />
       ) : (
         <>
           <Navbar setToken={setToken} />
-          <hr />
-          <div className="flex w-full">
+          <div className="flex flex-col lg:flex-row">
             <Sidebar />
-            <div className="w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base">
+            <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl">
               <Routes>
                 <Route path="/add" element={<Add token={token} />} />
                 <Route path="/list" element={<List token={token} />} />
                 <Route path="/orders" element={<Orders token={token} />} />
                 <Route path="*" element={<List token={token} />} />
               </Routes>
-            </div>
+            </main>
           </div>
         </>
       )}

@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { backendUrl } from "../App";
 import { toast } from "react-toastify";
+import PageHeader from "../components/PageHeader";
 
 const Add = ({ token }) => {
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
   const [image4, setImage4] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -19,6 +21,7 @@ const Add = ({ token }) => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -56,6 +59,8 @@ const Add = ({ token }) => {
     } catch (error) {
       console.log(error);
       toast.error(error.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -65,9 +70,12 @@ const Add = ({ token }) => {
     );
   };
 
-  const ImageBox = ({ image, setImage, id }) => (
-    <label htmlFor={id} className="cursor-pointer">
-      <div className="w-20 h-20 border border-gray-300 flex items-center justify-center bg-gray-50 overflow-hidden">
+  const ImageBox = ({ image, setImage, id, label }) => (
+    <label htmlFor={id} className="cursor-pointer group">
+      <div
+        className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center
+          bg-gray-50 overflow-hidden group-hover:border-gray-900 group-hover:bg-white transition-colors"
+      >
         {image ? (
           <img
             className="w-full h-full object-cover"
@@ -75,12 +83,15 @@ const Add = ({ token }) => {
             alt=""
           />
         ) : (
-          <span className="text-xs text-gray-400">Upload</span>
+          <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wide">
+            {label}
+          </span>
         )}
       </div>
       <input
         onChange={(e) => setImage(e.target.files[0])}
         type="file"
+        accept="image/*"
         id={id}
         hidden
       />
@@ -88,111 +99,133 @@ const Add = ({ token }) => {
   );
 
   return (
-    <form
-      onSubmit={onSubmitHandler}
-      className="flex flex-col w-full items-start gap-3"
-    >
-      <div>
-        <p className="mb-2">Upload Image</p>
-        <div className="flex gap-2">
-          <ImageBox image={image1} setImage={setImage1} id="image1" />
-          <ImageBox image={image2} setImage={setImage2} id="image2" />
-          <ImageBox image={image3} setImage={setImage3} id="image3" />
-          <ImageBox image={image4} setImage={setImage4} id="image4" />
-        </div>
-      </div>
+    <div>
+      <PageHeader
+        title="Add Product"
+        subtitle="Upload images and details — they appear on the storefront instantly."
+      />
 
-      <div className="w-full">
-        <p className="mb-2">Product name</p>
-        <input
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          className="w-full max-w-[500px] px-3 py-2 border"
-          type="text"
-          placeholder="Type here"
-          required
-        />
-      </div>
-
-      <div className="w-full">
-        <p className="mb-2">Product description</p>
-        <textarea
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-          className="w-full max-w-[500px] px-3 py-2 border"
-          placeholder="Write content here"
-          required
-        />
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-2 w-full sm:gap-8">
+      <form
+        onSubmit={onSubmitHandler}
+        className="admin-card p-6 sm:p-8 space-y-6 max-w-2xl"
+      >
         <div>
-          <p className="mb-2">Product category</p>
-          <select
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-3 py-2 border"
-          >
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Kids">Kids</option>
-          </select>
+          <label className="admin-label">Product images</label>
+          <div className="flex flex-wrap gap-3">
+            <ImageBox image={image1} setImage={setImage1} id="image1" label="Main" />
+            <ImageBox image={image2} setImage={setImage2} id="image2" label="Alt 2" />
+            <ImageBox image={image3} setImage={setImage3} id="image3" label="Alt 3" />
+            <ImageBox image={image4} setImage={setImage4} id="image4" label="Alt 4" />
+          </div>
         </div>
+
         <div>
-          <p className="mb-2">Sub category</p>
-          <select
-            onChange={(e) => setSubCategory(e.target.value)}
-            className="w-full px-3 py-2 border"
-          >
-            <option value="Topwear">Topwear</option>
-            <option value="Bottomwear">Bottomwear</option>
-            <option value="Winterwear">Winterwear</option>
-          </select>
-        </div>
-        <div>
-          <p className="mb-2">Product Price</p>
+          <label className="admin-label" htmlFor="name">Product name</label>
           <input
-            onChange={(e) => setPrice(e.target.value)}
-            value={price}
-            className="w-full px-3 py-2 border sm:w-[120px]"
-            type="number"
-            placeholder="25"
+            id="name"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            className="admin-input"
+            type="text"
+            placeholder="e.g. Cotton Round Neck Top"
+            required
           />
         </div>
-      </div>
 
-      <div>
-        <p className="mb-2">Product Sizes</p>
-        <div className="flex gap-3">
-          {["S", "M", "L", "XL", "XXL"].map((size) => (
-            <div key={size} onClick={() => toggleSize(size)}>
-              <p
-                className={`${
-                  sizes.includes(size) ? "bg-pink-100" : "bg-slate-200"
-                } px-3 py-1 cursor-pointer`}
+        <div>
+          <label className="admin-label" htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
+            className="admin-input min-h-[100px] resize-y"
+            placeholder="Material, fit, care instructions…"
+            required
+          />
+        </div>
+
+        <div className="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label className="admin-label" htmlFor="category">Category</label>
+            <select
+              id="category"
+              onChange={(e) => setCategory(e.target.value)}
+              value={category}
+              className="admin-input"
+            >
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="Kids">Kids</option>
+            </select>
+          </div>
+          <div>
+            <label className="admin-label" htmlFor="subCategory">Sub category</label>
+            <select
+              id="subCategory"
+              onChange={(e) => setSubCategory(e.target.value)}
+              value={subCategory}
+              className="admin-input"
+            >
+              <option value="Topwear">Topwear</option>
+              <option value="Bottomwear">Bottomwear</option>
+              <option value="Winterwear">Winterwear</option>
+            </select>
+          </div>
+          <div>
+            <label className="admin-label" htmlFor="price">Price</label>
+            <input
+              id="price"
+              onChange={(e) => setPrice(e.target.value)}
+              value={price}
+              className="admin-input"
+              type="number"
+              min="1"
+              placeholder="99"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="admin-label">Sizes</label>
+          <div className="flex flex-wrap gap-2">
+            {["S", "M", "L", "XL", "XXL"].map((size) => (
+              <button
+                key={size}
+                type="button"
+                onClick={() => toggleSize(size)}
+                className={`px-4 py-2 text-sm font-medium border rounded-md transition-colors ${
+                  sizes.includes(size)
+                    ? "bg-gray-900 text-white border-gray-900"
+                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-900"
+                }`}
               >
                 {size}
-              </p>
-            </div>
-          ))}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="flex gap-2 mt-2">
-        <input
-          onChange={() => setBestseller((prev) => !prev)}
-          checked={bestseller}
-          type="checkbox"
-          id="bestseller"
-        />
-        <label className="cursor-pointer" htmlFor="bestseller">
-          Add to bestseller
+        <label className="flex items-center gap-3 cursor-pointer select-none">
+          <input
+            onChange={() => setBestseller((prev) => !prev)}
+            checked={bestseller}
+            type="checkbox"
+            className="w-4 h-4 accent-gray-900"
+          />
+          <span className="text-sm text-gray-700">Feature as bestseller on home</span>
         </label>
-      </div>
 
-      <button type="submit" className="w-28 py-3 mt-4 bg-black text-white">
-        ADD
-      </button>
-    </form>
+        <button
+          type="submit"
+          disabled={submitting}
+          className="px-8 py-3 bg-gray-900 text-white text-sm font-medium rounded-md
+            hover:bg-black transition-colors disabled:opacity-60"
+        >
+          {submitting ? "Adding…" : "Add product"}
+        </button>
+      </form>
+    </div>
   );
 };
 
